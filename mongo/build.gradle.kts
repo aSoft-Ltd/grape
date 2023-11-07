@@ -13,6 +13,7 @@ kotlin {
         jvmMain.dependencies {
             api(db.mongo)
             api(kotlinx.serialization.toml)
+            api(libs.koncurrent.later.coroutines)
         }
 
         jvmTest.dependencies {
