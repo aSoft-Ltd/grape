@@ -20,7 +20,7 @@ class MongoService(private val options: MongoServiceOptions) {
                 col.insertOne(HealthToken())
                 val tokens = col.find().toList()
                 if (tokens.isEmpty()) return@measureTimedValue Status.UnHealthy
-                if (tokens.size <= options.maxTokens) return@measureTimedValue Status.Healthy
+                if (tokens.size <= options.maxHealthCheckTokens) return@measureTimedValue Status.Healthy
                 val token = tokens.first()
                 col.deleteOne(eq("_id", token.uid))
                 Status.Healthy

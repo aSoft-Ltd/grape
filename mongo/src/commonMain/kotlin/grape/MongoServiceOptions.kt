@@ -6,5 +6,5 @@ import kotlinx.coroutines.CoroutineScope
 class MongoServiceOptions(
     val scope: CoroutineScope,
     val db: MongoDatabase,
-    val maxTokens: Int
+    val maxHealthCheckTokens: Int
 )
