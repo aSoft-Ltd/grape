@@ -13,16 +13,22 @@ class MongoService(private val options: MongoServiceOptions) {
         Healthy, UnHealthy
     }
 
+    private val database by lazy {
+        options.mongo.getDatabase("statuses")
+    }
+
+    private val collection by lazy {
+        database.getCollection<HealthToken>("health_check_token")
+    }
     fun health() = options.scope.later {
         val (status, duration) = measureTimedValue {
             try {
-                val col = options.db.getCollection<HealthToken>("health-check-token")
-                col.insertOne(HealthToken())
-                val tokens = col.find().toList()
+                collection.insertOne(HealthToken())
+                val tokens = collection.find().toList()
                 if (tokens.isEmpty()) return@measureTimedValue Status.UnHealthy
                 if (tokens.size <= options.maxHealthCheckTokens) return@measureTimedValue Status.Healthy
                 val token = tokens.first()
-                col.deleteOne(eq("_id", token.uid))
+                collection.deleteOne(eq("_id", token.uid))
                 Status.Healthy
             } catch (err: Throwable) {
                 err.printStackTrace()

@@ -10,4 +10,6 @@ class MongoDatabaseConfiguration(
     val maxHealthCheckToken: Int? = null
 ) {
     fun toDb() = MongoClient.create(url).getDatabase(name)
+
+    fun toClient() = MongoClient.create(url)
 }
